@@ -33,7 +33,22 @@ class TestController extends Controller
             'id.required' => 'No se encontró el producto',
         ]);
 
-        Products::update();
+        Products::update($request->id, $request->all());
 
+        return redirect()->route('/')->with([
+            'message' => 'Producto actualizado correctamente',
+            'type' => 'success',
+        ]);
+
+    }
+
+    public function delete($id)
+    {
+        Products::destroy($id);
+
+        return redirect()->route('/')->with([
+            'message' => 'Producto eliminado correctamente',
+            'type' => 'success',
+        ]);
     }
 }
