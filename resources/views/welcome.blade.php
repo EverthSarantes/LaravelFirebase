@@ -20,9 +20,14 @@
 
 <body>
     <div class="text-center">
-        <h1>Crud sencillo con Firebase y Laravel</h1>
+        <h1>CRUD con Firebase y Laravel</h1>
     </div>
-
+    
+    @if(session('message'))
+    <div class="alert alert-{{session('type')}}">
+        {{ session('message') }}
+    </div>
+    @endif
     <div class="d-flex justify-content-center">
         <button type="button" class="btn btn-primary ml-2 mb-2" data-toggle="modal" data-target="#miModal">Agregar</button>
     </div>
@@ -38,24 +43,25 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="miFormulario">
+                    <form id="form_store" action="{{route('store')}}" method="POST">
+                        @csrf
                         <div class="form-group">
                             <label for="codigo">Codigo</label>
-                            <input type="number" class="form-control" id="codigo" placeholder="Ingrese el codigo">
+                            <input type="number" class="form-control" name="codigo" id="codigo" placeholder="Ingrese el codigo">
                         </div>
                         <div class="form-group">
                             <label for="descript">Descripcion</label>
-                            <input type="text" class="form-control" id="descript" placeholder="Ingrese la descripcion del producto">
+                            <input type="text" class="form-control" name="descripcion" id="descript" placeholder="Ingrese la descripcion del producto">
                         </div>
                         <div class="form-group">
                             <label for="cant">Cantidad</label>
-                            <input type="number" class="form-control" id="cant" placeholder="Ingrese la cantidad">
+                            <input type="number" class="form-control" name="cantidad" id="cant" placeholder="Ingrese la cantidad">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" onclick="guardarDatos()">Guardar</button>
+                    <button type="submit" class="btn btn-primary" form="form_store">Guardar</button>
                 </div>
             </div>
         </div>
@@ -72,24 +78,27 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="miFormulario">
+                    <form id="edit_form" action="{{route('update')}}" method="POST">
+                        @csrf
+                        @method('put')
                         <div class="form-group">
                             <label for="codigo">Codigo</label>
-                            <input type="number" class="form-control" id="codigo" placeholder="Ingrese el codigo">
+                            <input type="number" class="form-control" name="codigo" id="codigo" placeholder="Ingrese el codigo">
                         </div>
                         <div class="form-group">
                             <label for="descript">Descripcion</label>
-                            <input type="text" class="form-control" id="descript" placeholder="Ingrese la descripcion del producto">
+                            <input type="text" class="form-control" name="descripcion" id="descript" placeholder="Ingrese la descripcion del producto">
                         </div>
                         <div class="form-group">
                             <label for="cant">Cantidad</label>
-                            <input type="number" class="form-control" id="cant" placeholder="Ingrese la cantidad">
+                            <input type="number" class="form-control" name="cantidad" id="cant" placeholder="Ingrese la cantidad">
                         </div>
+                        <input type="hidden" name="id" id="id">
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" onclick="editarDatos()">Guardar</button>
+                    <button type="submit" class="btn btn-primary" form="edit_form">Guardar</button>
                 </div>
             </div>
         </div>
@@ -108,17 +117,21 @@
                 <div class="modal-body">
                     <p>¿Estás seguro de que deseas eliminar este elemento? Esta acción no se puede deshacer.</p>
                 </div>
+                <form action="" method="post" id="form_delete">
+                    @csrf
+                    @method('delete')
+                </form>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirmarEliminar">Eliminar</button>
+                    <button type="submit" form="form_delete" class="btn btn-danger" id="confirmarEliminar">Eliminar</button>
                 </div>
             </div>
         </div>
     </div>
 
 
-    <div class=" d-flex justify-content-center">
-        <div class="w-75 p-3">
+    <div class="d-flex justify-content-center">
+        <div class=" w-75 p-3">
             <table class="table">
                 <thead>
                     <tr>
@@ -129,24 +142,49 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($productos as $producto)
+
                     <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
+                        <td>{{ $producto -> codigo }}</td>
+                        <td>{{ $producto->descripcion }}</td>
+                        <td>{{ $producto->cantidad }}</td>
                         <td>
-                            <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#miModaledit">
+                            <button type="button" data-datos="{{$producto->toJson()}}" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#miModaledit">
                                 Editar
                             </button>
-                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#miModalDelete">
+                            <button type="button" class="btn btn-danger btn-sm btn-delete" data-url="{{route('delete', ['id' => $producto->id])}}" data-toggle="modal" data-target="#miModalDelete">
                                 Borrar
                             </button>
                         </td>
                     </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
-
     </div>
 </body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const botonesEliminar = document.querySelectorAll('.btn-delete');
+        botonesEliminar.forEach(boton => {
+            boton.addEventListener('click', function() {
+                const url = boton.getAttribute('data-url');
+                document.querySelector('#miModalDelete form').setAttribute('action', url);
+            });
+        });
+
+        const botonesEditar = document.querySelectorAll('.btn-warning');
+        botonesEditar.forEach(boton => {
+            boton.addEventListener('click', function() {
+                const datos = JSON.parse(boton.getAttribute('data-datos'));
+                document.querySelector('#edit_form input[name="codigo"]').value = datos.codigo;
+                document.querySelector('#edit_form input[name="descripcion"]').value = datos.descripcion;
+                document.querySelector('#edit_form input[name="cantidad"]').value = datos.cantidad;
+                document.querySelector('#edit_form input[name="id"]').value = datos.id;
+            });
+        });
+    });
+</script>
 
 </html>
