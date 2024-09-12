@@ -23,7 +23,7 @@
         <h1>Crud sencillo con Firebase y Laravel</h1>
     </div>
 
-    <div >
+    <div class="d-flex justify-content-center">
         <button type="button" class="btn btn-primary ml-2 mb-2" data-toggle="modal" data-target="#miModal">Agregar</button>
     </div>
 
@@ -117,32 +117,35 @@
     </div>
 
 
-    <div style="height: 80">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Codigo</th>
-                    <th scope="col">Descripción</th>
-                    <th scope="col">Cantidad</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>
-                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#miModaledit">
-                            Editar
-                        </button>
-                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#miModalDelete">
-                            Borrar
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div class=" d-flex justify-content-center">
+        <div class="w-75 p-3">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Codigo</th>
+                        <th scope="col">Descripción</th>
+                        <th scope="col">Cantidad</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                        <td>
+                            <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#miModaledit">
+                                Editar
+                            </button>
+                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#miModalDelete">
+                                Borrar
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
 </body>
 
