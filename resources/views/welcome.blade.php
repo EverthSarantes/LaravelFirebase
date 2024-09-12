@@ -19,12 +19,12 @@
 </head>
 
 <body>
-    <div class="container-fluid">
+    <div class="text-center">
         <h1>Crud sencillo con Firebase y Laravel</h1>
     </div>
 
-    <div class="container-fluid">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#miModal">Add</button>
+    <div >
+        <button type="button" class="btn btn-primary ml-2 mb-2" data-toggle="modal" data-target="#miModal">Agregar</button>
     </div>
 
     <!-- Modal Agregar-->
